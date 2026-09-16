@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ article.nom_article }}</h1>
+<ul>
+    <li>Catégorie : {{ article.categorie }}</li>
+    <li>Quantité : {{ article.quantite }}</li>
+    <li>Prix unitaire : {{ article.prix_unitaire }}</li>
+    <li>Date fabrication : {{ article.date_fabrication|default:"—" }}</li>
+    <li>Date expiration : {{ article.date_expiration|default:"—" }}</li>
+</ul>
+<a href="{% url 'stock:article_list' %}">Retour</a>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Commandes</h1>
+<a href="{% url 'transactions:commande_create' %}">+ Nouvelle commande</a>
+<table>
+    <tr><th>Article</th><th>Fournisseur</th><th>Quantité</th><th>Prix</th><th>Date</th><th>Actions</th></tr>
+    {% for c in commandes %}
+    <tr>
+        <td>{{ c.article.nom_article }}</td>
+        <td>{{ c.fournisseur }}</td>
+        <td>{{ c.quantite }}</td>
+        <td>{{ c.prix }}</td>
+        <td>{{ c.date_commande }}</td>
+        <td>
+            <a href="{% url 'transactions:commande_update' c.pk %}">Modifier</a>
+            <a href="{% url 'transactions:commande_delete' c.pk %}">Supprimer</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">Aucune commande.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

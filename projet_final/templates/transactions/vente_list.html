@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Ventes</h1>
+<a href="{% url 'transactions:vente_create' %}">+ Nouvelle vente</a>
+<table>
+    <tr><th>Article</th><th>Client</th><th>Quantité</th><th>Prix</th><th>Date</th><th>Actions</th></tr>
+    {% for v in ventes %}
+    <tr>
+        <td>{{ v.article.nom_article }}</td>
+        <td>{{ v.client }}</td>
+        <td>{{ v.quantite }}</td>
+        <td>{{ v.prix }}</td>
+        <td>{{ v.date_vente }}</td>
+        <td>
+            <a href="{% url 'transactions:vente_update' v.pk %}">Modifier</a>
+            <a href="{% url 'transactions:vente_delete' v.pk %}">Supprimer</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">Aucune vente.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
