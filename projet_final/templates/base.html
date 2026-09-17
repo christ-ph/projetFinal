@@ -13,79 +13,36 @@
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
 
     {% block css %}
-      <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
-            integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer" />
-      {% compress css %}
-        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-      {% endcompress %}
+      <link rel="stylesheet" href="{% static 'css/dist/output.css' %}">
     {% endblock css %}
 
     {% block javascript %}
-      <script defer
-              src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
-              integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
-              crossorigin="anonymous"
-              referrerpolicy="no-referrer"></script>
       {% compress js %}
         <script defer src="{% static 'js/project.js' %}"></script>
       {% endcompress %}
     {% endblock javascript %}
   </head>
-  <body class="{% block bodyclass %}{% endblock bodyclass %}">
+  <body class="{% block bodyclass %}{% endblock bodyclass %} bg-primary text-white">
     {% block body %}
-      <div class="mb-1">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-          <div class="container-fluid">
-            <button class="navbar-toggler navbar-toggler-right"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <a class="navbar-brand" href="/">projet_final</a>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="/stock/">Articles</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/partenaires/clients/">Clients</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/partenaires/fournisseurs/">Fournisseurs</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/transactions/ventes/">Ventes</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/transactions/commandes/">Commandes</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/admin/">Admin</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+      <div class="bg-red-500">
+        <nav class="bg-secondary px-4 py-3 flex items-center justify-between">
+          <a class="font-bold text-lg" href="/">projet_final</a>
+          <ul class="flex gap-4 text-sm">
+            <li><a class="hover:text-red-600" href="/stock/">Articles</a></li>
+            <li><a class="hover:text-blue-600" href="/partenaires/clients/">Clients</a></li>
+            <li><a class="hover:text-blue-600" href="/partenaires/fournisseurs/">Fournisseurs</a></li>
+            <li><a class="hover:text-blue-600" href="/transactions/ventes/">Ventes</a></li>
+            <li><a class="hover:text-blue-600" href="/transactions/commandes/">Commandes</a></li>
+            <li><a class="hover:text-blue-600" href="/admin/">Admin</a></li>
+          </ul>
         </nav>
       </div>
 
-      <div class="container">
+      <div class="container mx-auto px-4">
         {% if messages %}
           {% for message in messages %}
-            <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            <div class="p-3 mb-2 rounded {% if message.tags %}bg-{{ message.tags }}-100{% endif %}">
               {{ message }}
-              <button type="button"
-                      class="btn-close"
-                      data-bs-dismiss="alert"
-                      aria-label="Close"></button>
             </div>
           {% endfor %}
         {% endif %}

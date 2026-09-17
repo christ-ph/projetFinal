@@ -4,8 +4,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import RedirectView
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework.authtoken.views import obtain_auth_token
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView # type: ignore
+from rest_framework.authtoken.views import obtain_auth_token # type: ignore
 
 urlpatterns = [
     # La racine redirige vers /stock/
@@ -43,7 +43,7 @@ if settings.DEBUG:
         path("500/", default_views.server_error),
     ]
     if "debug_toolbar" in settings.INSTALLED_APPS:
-        import debug_toolbar
+        import debug_toolbar # type: ignore
 
         urlpatterns = [
             path("__debug__/", include(debug_toolbar.urls)),

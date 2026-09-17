@@ -273,3 +273,4 @@ projet_final/media/
 .pytest_cache/
 
 .env
+output.css

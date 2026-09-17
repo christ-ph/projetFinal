@@ -1,12 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ article.nom_article }}</h1>
-<ul>
-    <li>Catégorie : {{ article.categorie }}</li>
-    <li>Quantité : {{ article.quantite }}</li>
-    <li>Prix unitaire : {{ article.prix_unitaire }}</li>
-    <li>Date fabrication : {{ article.date_fabrication|default:"—" }}</li>
-    <li>Date expiration : {{ article.date_expiration|default:"—" }}</li>
-</ul>
-<a href="{% url 'stock:article_list' %}">Retour</a>
+
+<div class="min-h-screen w-full flex justify-center items-center bg-primary px-4">
+  <div class="w-full max-w-md bg-primary border border-border rounded-xl px-6 py-8 text-center
+              shadow-[0_4px_10px_#FFC73B]
+              hover:-translate-y-1 hover:scale-[1.03] hover:border-border
+              transition duration-200 flex flex-col gap-4">
+
+    <h1 class="text-[1.05rem] font-semibold text-[#3BFFC7] wrap-break-word">
+      <strong>Nom :</strong> {{ article.nom_article }}
+    </h1>
+
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Catégorie : {{ article.categorie }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Quantité : {{ article.quantite }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Prix unitaire : {{ article.prix_unitaire }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Date fabrication : {{ article.date_fabrication|default:"—" }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Date expiration : {{ article.date_expiration|default:"—" }}</p>
+
+    <button class="btn-primary mt-2">
+      <a href="{% url 'stock:article_list' %}">Retour</a>
+    </button>
+  </div>
+</div>
+
 {% endblock %}
+
+
+

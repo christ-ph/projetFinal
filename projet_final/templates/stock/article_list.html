@@ -1,22 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Articles</h1>
-<a href="{% url 'stock:article_create' %}">+ Nouvel article</a>
-<table>
-    <tr><th>Nom</th><th>Catégorie</th><th>Quantité</th><th>Prix</th><th>Actions</th></tr>
+
+<h1 class="text-2xl font-bold text-white mb-6 text-center">Articles</h1>
+
+<div class="flex flex-col items-center">
+
+  <a href="{% url 'stock:article_create' %}"
+     class="inline-block bg-primary hover:bg-secondary hover:-translate-y-0.5
+            text-white font-semibold text-sm px-6 py-3 rounded-lg transition mb-6">
+    + Nouvel article
+  </a>
+
+  <div class="flex flex-wrap w-full justify-start gap-4">
     {% for a in articles %}
-    <tr>
-        <td><a href="{% url 'stock:article_detail' a.pk %}">{{ a.nom_article }}</a></td>
-        <td>{{ a.categorie }}</td>
-        <td>{{ a.quantite }}</td>
-        <td>{{ a.prix_unitaire }}</td>
-        <td>
-            <a href="{% url 'stock:article_update' a.pk %}">Modifier</a>
-            <a href="{% url 'stock:article_delete' a.pk %}">Supprimer</a>
-        </td>
-    </tr>
+      <div class="flex-none w-[220px] bg-primary border border-border
+                  rounded-xl p-5 text-center shadow-[0_4px_10px_#FFC73B]
+                  hover:-translate-y-1 hover:scale-[1.03] hover:border-border
+                  transition duration-200">
+
+        <h3 class="text-[1.05rem] font-semibold text-[#3BFFC7] mb-2 break-words">
+          <a href="{% url 'stock:article_detail' a.pk %}"><strong>Nom</strong>: {{ a.nom_article }}</a>
+        </h3>
+
+        <p class="text-[0.85rem] text-[#3BFFC7] break-words"> <strong>Categorie</strong>: {{ a.categorie }}</p>
+        <p class="text-[0.85rem] text-[#3BFFC7] break-words"><strong>Quantite</strong>: {{ a.quantite }}</p>
+        <p class="text-[0.85rem] text-[#3BFFC7] break-words"><strong>Prix unitaire</strong>: {{ a.prix_unitaire }}</p>
+
+        <div class="flex flex-col w-full gap-2 mt-3">
+          <a href="{% url 'stock:article_update' a.pk %}"
+             class="btn-primary !px-3 !py-2 !text-xs w-full text-center">Modifier</a>
+          <a href="{% url 'stock:article_delete' a.pk %}"
+             class="btn-secondary !px-3 !py-2 !text-xs w-full text-center">Supprimer</a>
+        </div>
+      </div>
     {% empty %}
-    <tr><td colspan="5">Aucun article.</td></tr>
+      <p class="text-[#3BFFC7]">Aucun article.</p>
     {% endfor %}
-</table>
+  </div>
+
+</div>
 {% endblock %}

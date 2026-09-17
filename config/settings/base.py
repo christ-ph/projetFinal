@@ -86,6 +86,7 @@ DJANGO_APPS = [
     "partenaires",
     "stock",
     "transactions",
+
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
