@@ -1,9 +1,10 @@
-# ruff: noqa: ERA001, E501
+# ruff: noqa: ERA001
 """Base settings to build other settings files upon."""
+
 import os
 from pathlib import Path
 
-import environ # type: ignore
+import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # projet_final/
@@ -86,7 +87,6 @@ DJANGO_APPS = [
     "partenaires",
     "stock",
     "transactions",
-
 ]
 
 THIRD_PARTY_APPS = [

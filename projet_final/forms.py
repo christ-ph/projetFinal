@@ -11,4 +11,6 @@ class StyledFormMixin:
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             existing_classes = field.widget.attrs.get("class", "")
-            field.widget.attrs["class"] = f"{existing_classes} {self.field_classes}".strip()
+            field.widget.attrs["class"] = (
+                f"{existing_classes} {self.field_classes}".strip()
+            )

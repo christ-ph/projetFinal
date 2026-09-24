@@ -1,11 +1,19 @@
-from rest_framework.viewsets import ModelViewSet
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import Paginator
 from django.contrib import messages
-from .models import Client, Fournisseur
-from .forms import ClientForm, FournisseurForm
-from .serializers import ClientSerializer, FournisseurSerializer
-from projet_final.users.permissions import IsBusinessAdmin, admin_role_required
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
+
+from projet_final.users.permissions import IsBusinessAdmin
+from projet_final.users.permissions import admin_role_required
+
+from .forms import ClientForm
+from .forms import FournisseurForm
+from .models import Client
+from .models import Fournisseur
+from .serializers import ClientSerializer
+from .serializers import FournisseurSerializer
 
 
 # ---------- CLIENTS ----------
@@ -16,8 +24,13 @@ def client_list(request):
     return render(
         request,
         "partenaires/client_list.html",
-        {"clients": page_obj, "page_obj": page_obj, "is_paginated": page_obj.has_other_pages()},
+        {
+            "clients": page_obj,
+            "page_obj": page_obj,
+            "is_paginated": page_obj.has_other_pages(),
+        },
     )
+
 
 @admin_role_required
 def client_create(request):
@@ -26,7 +39,12 @@ def client_create(request):
         form.save()
         messages.success(request, "Client enregistré avec succès.")
         return redirect("partenaires:client_list")
-    return render(request, "partenaires/client_form.html", {"form": form, "titre": "Nouveau client"})
+    return render(
+        request,
+        "partenaires/client_form.html",
+        {"form": form, "titre": "Nouveau client"},
+    )
+
 
 @admin_role_required
 def client_update(request, pk):
@@ -36,7 +54,12 @@ def client_update(request, pk):
         form.save()
         messages.success(request, "Client mis à jour avec succès.")
         return redirect("partenaires:client_list")
-    return render(request, "partenaires/client_form.html", {"form": form, "titre": "Modifier client"})
+    return render(
+        request,
+        "partenaires/client_form.html",
+        {"form": form, "titre": "Modifier client"},
+    )
+
 
 @admin_role_required
 def client_delete(request, pk):
@@ -45,7 +68,11 @@ def client_delete(request, pk):
         client.delete()
         messages.success(request, "Client supprimé avec succès.")
         return redirect("partenaires:client_list")
-    return render(request, "partenaires/confirm_delete.html", {"objet": client, "retour": "partenaires:client_list"})
+    return render(
+        request,
+        "partenaires/confirm_delete.html",
+        {"objet": client, "retour": "partenaires:client_list"},
+    )
 
 
 # ---------- FOURNISSEURS ----------
@@ -56,8 +83,13 @@ def fournisseur_list(request):
     return render(
         request,
         "partenaires/fournisseur_list.html",
-        {"fournisseurs": page_obj, "page_obj": page_obj, "is_paginated": page_obj.has_other_pages()},
+        {
+            "fournisseurs": page_obj,
+            "page_obj": page_obj,
+            "is_paginated": page_obj.has_other_pages(),
+        },
     )
+
 
 @admin_role_required
 def fournisseur_create(request):
@@ -66,7 +98,12 @@ def fournisseur_create(request):
         form.save()
         messages.success(request, "Fournisseur enregistré avec succès.")
         return redirect("partenaires:fournisseur_list")
-    return render(request, "partenaires/fournisseur_form.html", {"form": form, "titre": "Nouveau fournisseur"})
+    return render(
+        request,
+        "partenaires/fournisseur_form.html",
+        {"form": form, "titre": "Nouveau fournisseur"},
+    )
+
 
 @admin_role_required
 def fournisseur_update(request, pk):
@@ -76,7 +113,12 @@ def fournisseur_update(request, pk):
         form.save()
         messages.success(request, "Fournisseur mis à jour avec succès.")
         return redirect("partenaires:fournisseur_list")
-    return render(request, "partenaires/fournisseur_form.html", {"form": form, "titre": "Modifier fournisseur"})
+    return render(
+        request,
+        "partenaires/fournisseur_form.html",
+        {"form": form, "titre": "Modifier fournisseur"},
+    )
+
 
 @admin_role_required
 def fournisseur_delete(request, pk):
@@ -85,8 +127,11 @@ def fournisseur_delete(request, pk):
         fournisseur.delete()
         messages.success(request, "Fournisseur supprimé avec succès.")
         return redirect("partenaires:fournisseur_list")
-    return render(request, "partenaires/confirm_delete.html", {"objet": fournisseur, "retour": "partenaires:fournisseur_list"})
-
+    return render(
+        request,
+        "partenaires/confirm_delete.html",
+        {"objet": fournisseur, "retour": "partenaires:fournisseur_list"},
+    )
 
 
 class ClientViewSet(ModelViewSet):
@@ -99,6 +144,3 @@ class FournisseurViewSet(ModelViewSet):
     queryset = Fournisseur.objects.all()
     serializer_class = FournisseurSerializer
     permission_classes = [IsBusinessAdmin]
-
-
-

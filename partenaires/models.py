@@ -19,6 +19,7 @@ class Client(models.Model):
     def __str__(self):
         return f"{self.prenom} {self.nom}"
 
+
 class Fournisseur(models.Model):
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)

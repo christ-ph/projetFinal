@@ -1,7 +1,9 @@
 # transactions/services.py
 from django.db import transaction
 from django.utils import timezone
+
 from stock.models import Article
+
 from .models import Vente
 
 
@@ -18,18 +20,18 @@ def creer_une_vente(article_id, quantite_demandee, client_id):
     article = Article.objects.select_for_update().get(pk=article_id)
 
     if article.quantite < quantite_demandee:
-        raise StockInsuffisantError(
+        msg = (
             f"Vente impossible : quantité insuffisante "
             f"(demandé: {quantite_demandee}, disponible: {article.quantite})"
         )
+        raise StockInsuffisantError(msg)
 
     article.quantite -= quantite_demandee
     article.save()
 
-    vente = Vente.objects.create(
+    return Vente.objects.create(
         article=article,
         client_id=client_id,
         quantite=quantite_demandee,
         date=timezone.now(),
     )
-    return vente

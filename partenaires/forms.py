@@ -1,6 +1,9 @@
 from django import forms
+
 from projet_final.forms import StyledFormMixin
-from .models import Client, Fournisseur
+
+from .models import Client
+from .models import Fournisseur
 
 
 class ClientForm(StyledFormMixin, forms.ModelForm):

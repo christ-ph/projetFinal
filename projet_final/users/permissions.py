@@ -4,14 +4,16 @@ from collections.abc import Callable
 from functools import wraps
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from django.http import HttpRequest
+from django.http import HttpResponse
+from rest_framework.permissions import SAFE_METHODS
+from rest_framework.permissions import BasePermission
 
 from .models import User
-
 
 STAFF_ROLES = {User.Role.ADMIN, User.Role.EMPLOYE}
 

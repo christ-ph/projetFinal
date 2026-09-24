@@ -1,13 +1,14 @@
 from allauth.account.forms import LoginForm as AllauthLoginForm
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
-from django.contrib.auth import forms as admin_forms
-from django.utils.translation import gettext_lazy as _
 from django import forms
+from django.contrib.auth import forms as admin_forms
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+
+from partenaires.models import Client
 
 from .models import User
-from partenaires.models import Client
 
 
 class UserAdminChangeForm(admin_forms.UserChangeForm):
@@ -43,38 +44,43 @@ class UserSignupForm(SignupForm):
 
     nom = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={'class': FIELD_CLASSES, 'placeholder': 'Nom'}),
+        widget=forms.TextInput(attrs={"class": FIELD_CLASSES, "placeholder": "Nom"}),
     )
     prenom = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={'class': FIELD_CLASSES, 'placeholder': 'Prénom'}),
+        widget=forms.TextInput(attrs={"class": FIELD_CLASSES, "placeholder": "Prénom"}),
     )
     adresse = forms.CharField(
         max_length=255,
-        widget=forms.TextInput(attrs={'class': FIELD_CLASSES, 'placeholder': 'Adresse'}),
+        widget=forms.TextInput(
+            attrs={"class": FIELD_CLASSES, "placeholder": "Adresse"},
+        ),
     )
     telephone = forms.CharField(
-        max_length=20, required=False,
-        widget=forms.TextInput(attrs={'class': FIELD_CLASSES, 'placeholder': 'Téléphone'}),
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": FIELD_CLASSES, "placeholder": "Téléphone"},
+        ),
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # applique la même classe aux champs générés par allauth (username, email, password1, password2)
         for name, field in self.fields.items():
-            if name not in ('nom', 'prenom', 'adresse', 'telephone'):
-                field.widget.attrs.update({'class': self.FIELD_CLASSES})
-                if name == 'email':
-                    field.widget.attrs['placeholder'] = 'Email'
-                elif name == 'username':
-                    field.widget.attrs['placeholder'] = "Nom d'utilisateur"
-                elif name == 'password1':
-                    field.widget.attrs['placeholder'] = 'Mot de passe'
-                elif name == 'password2':
-                    field.widget.attrs['placeholder'] = 'Confirmer le mot de passe'
+            if name not in ("nom", "prenom", "adresse", "telephone"):
+                field.widget.attrs.update({"class": self.FIELD_CLASSES})
+                if name == "email":
+                    field.widget.attrs["placeholder"] = "Email"
+                elif name == "username":
+                    field.widget.attrs["placeholder"] = "Nom d'utilisateur"
+                elif name == "password1":
+                    field.widget.attrs["placeholder"] = "Mot de passe"
+                elif name == "password2":
+                    field.widget.attrs["placeholder"] = "Confirmer le mot de passe"
 
-            if name in ('password1', 'password2'):
-                field.help_text = ''
+            if name in ("password1", "password2"):
+                field.help_text = ""
 
     @transaction.atomic
     def save(self, request):
@@ -82,17 +88,16 @@ class UserSignupForm(SignupForm):
         user = super().save(request)
         user.role = User.Role.CLIENT
         user.name = f"{self.cleaned_data['prenom']} {self.cleaned_data['nom']}"
-        user.telephone = self.cleaned_data['telephone']
-        user.save(update_fields=['role', 'name', 'telephone'])
+        user.telephone = self.cleaned_data["telephone"]
+        user.save(update_fields=["role", "name", "telephone"])
         Client.objects.create(
             user=user,
-            nom=self.cleaned_data['nom'],
-            prenom=self.cleaned_data['prenom'],
+            nom=self.cleaned_data["nom"],
+            prenom=self.cleaned_data["prenom"],
             telephone=user.telephone,
-            adresse=self.cleaned_data['adresse'],
+            adresse=self.cleaned_data["adresse"],
         )
         return user
-
 
 
 class UserSocialSignupForm(SocialSignupForm):
@@ -119,15 +124,19 @@ class LoginForm(AllauthLoginForm):
         )
         for name, field in self.fields.items():
             if name == "remember":
-                field.widget.attrs.update({
-                    "class": (
-                        "h-4 w-4 appearance-none rounded border border-slate-400 bg-white "
-                        "checked:border-primary checked:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                    )
-                })
+                field.widget.attrs.update(
+                    {
+                        "class": (
+                            "h-4 w-4 appearance-none rounded border border-slate-400 bg-white "
+                            "checked:border-primary checked:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        ),
+                    },
+                )
             else:
                 field.widget.attrs.update({"class": field_classes})
                 if name == "login":
-                    field.widget.attrs["placeholder"] = "Adresse e-mail ou nom d'utilisateur"
+                    field.widget.attrs["placeholder"] = (
+                        "Adresse e-mail ou nom d'utilisateur"
+                    )
                 elif name == "password":
                     field.widget.attrs["placeholder"] = "Saisissez votre mot de passe"

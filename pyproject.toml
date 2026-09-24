@@ -76,13 +76,13 @@ js.indent_size = 2
 
 # ==== ruff ====
 [tool.ruff]
-# Exclude a variety of commonly ignored directories.
 extend-exclude = [
   "*/migrations/*.py",
   "staticfiles/*",
 ]
 
-lint.select = [
+[tool.ruff.lint]
+select = [
   "A",
   "ASYNC",
   "B",
@@ -132,15 +132,25 @@ lint.select = [
   "W",
   "YTT",
 ]
-lint.ignore = [
-  "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
-  "S101",   # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
-  "SIM102", # sometimes it's better to nest
-  # of types for comparison.
-  # Deactivated because it can make the code slow:
-  # https://github.com/astral-sh/ruff/issues/7871
+ignore = [
+  "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
+  "S101",    # Use of assert detected
+  "SIM102",  # sometimes it's better to nest
+  "E501",    # ligne trop longue — géré manuellement / par le formateur
+  "COM812",  # conflit avec ruff format
+  "TC002",   # imports runtime-evaluated (permissions.py)
+  "TC003",   # imports runtime-evaluated (permissions.py)
 ]
-lint.isort.force-single-line = true
+
+[tool.ruff.lint.per-file-ignores]
+# Scripts de seed : random est légitime
+"stock/management/commands/seed_data.py" = ["S311", "E501"]
+# Chaînes Tailwind longues : non découpables proprement
+"projet_final/forms.py" = ["E501"]
+"projet_final/users/forms.py" = ["E501"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
 
 # ==== pyproject-fmt ====
 [tool.pyproject-fmt]
@@ -179,7 +189,6 @@ plugins = [
 ]
 
 [[tool.mypy.overrides]]
-# Django migrations should not produce any errors:
 module = "*.migrations.*"
 ignore_errors = true
 

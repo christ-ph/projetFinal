@@ -8,18 +8,20 @@ Usage :
 """
 
 import random
+from datetime import timedelta
 from decimal import Decimal
-from datetime import date, timedelta
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from faker import Faker
 
+from partenaires.models import Client
+from partenaires.models import Fournisseur
 from stock.models import Article
-from partenaires.models import Client, Fournisseur
-from transactions.models import Vente, Commande
+from transactions.models import Commande
+from transactions.models import Vente
 
-fake = Faker("fr_FR")   # données francophones
+fake = Faker("fr_FR")  # données francophones
 
 
 CATEGORIES = [
@@ -36,12 +38,36 @@ class Command(BaseCommand):
     help = "Remplit la base avec des données de test (clients, fournisseurs, articles, ventes, commandes)."
 
     def add_arguments(self, parser):
-        parser.add_argument("--clients", type=int, default=50, help="Nombre de clients à créer")
-        parser.add_argument("--fournisseurs", type=int, default=20, help="Nombre de fournisseurs")
-        parser.add_argument("--articles", type=int, default=80, help="Nombre d'articles")
+        parser.add_argument(
+            "--clients",
+            type=int,
+            default=50,
+            help="Nombre de clients à créer",
+        )
+        parser.add_argument(
+            "--fournisseurs",
+            type=int,
+            default=20,
+            help="Nombre de fournisseurs",
+        )
+        parser.add_argument(
+            "--articles",
+            type=int,
+            default=80,
+            help="Nombre d'articles",
+        )
         parser.add_argument("--ventes", type=int, default=150, help="Nombre de ventes")
-        parser.add_argument("--commandes", type=int, default=80, help="Nombre de commandes")
-        parser.add_argument("--flush", action="store_true", help="Supprime toutes les données avant")
+        parser.add_argument(
+            "--commandes",
+            type=int,
+            default=80,
+            help="Nombre de commandes",
+        )
+        parser.add_argument(
+            "--flush",
+            action="store_true",
+            help="Supprime toutes les données avant",
+        )
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -106,13 +132,15 @@ class Command(BaseCommand):
             date_exp = date_fab + timedelta(days=random.randint(180, 1095))
             articles.append(
                 Article(
-                    nom_article=fake.unique.word().capitalize() + " " + fake.unique.bothify(text="??-##"),
+                    nom_article=fake.unique.word().capitalize()
+                    + " "
+                    + fake.unique.bothify(text="??-##"),
                     categorie=random.choice(CATEGORIES),
                     quantite=random.randint(0, 500),
                     prix_unitaire=Decimal(random.randint(100, 50_000)),
                     date_fabrication=date_fab,
                     date_expiration=date_exp,
-                )
+                ),
             )
         return Article.objects.bulk_create(articles)
 
@@ -130,7 +158,7 @@ class Command(BaseCommand):
                     client=c,
                     quantite=qte,
                     prix=prix,
-                )
+                ),
             )
         return Vente.objects.bulk_create(ventes)
 
@@ -141,13 +169,13 @@ class Command(BaseCommand):
             a = random.choice(articles)
             f = random.choice(fournisseurs)
             qte = random.randint(10, 200)
-            prix = a.prix_unitaire * Decimal("0.8")   # prix d'achat ~ -20 %
+            prix = a.prix_unitaire * Decimal("0.8")  # prix d'achat ~ -20 %
             commandes.append(
                 Commande(
                     article=a,
                     fournisseur=f,
                     quantite=qte,
                     prix=prix.quantize(Decimal("0.01")),
-                )
+                ),
             )
         return Commande.objects.bulk_create(commandes)

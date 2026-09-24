@@ -1,11 +1,14 @@
 from rest_framework import serializers
-from .models import Vente,Commande
+
+from .models import Commande
+from .models import Vente
 
 
 class VenteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vente
         fields = "__all__"
+
 
 class CommandeSerializer(serializers.ModelSerializer):
     class Meta:

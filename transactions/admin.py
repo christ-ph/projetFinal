@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Vente, Commande
+
+from .models import Commande
+from .models import Vente
 
 
 @admin.register(Vente)
@@ -21,8 +23,8 @@ class VenteAdmin(admin.ModelAdmin):
     ordering = ("-date_vente",)
     list_per_page = 25
     date_hierarchy = "date_vente"
-    autocomplete_fields = ("article", "client")   # champ avec autocomplétion
-    list_select_related = ("article", "client")   # évite les requêtes N+1
+    autocomplete_fields = ("article", "client")  # champ avec autocomplétion
+    list_select_related = ("article", "client")  # évite les requêtes N+1
 
     @admin.display(description="Total")
     def total(self, obj):
