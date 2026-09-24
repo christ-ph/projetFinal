@@ -1,10 +1,23 @@
+<!-- transactions/templates/transactions/vente_form.html -->
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ titre }}</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enregistrer</button>
-    <a href="{% url 'transactions:vente_list' %}">Annuler</a>
-</form>
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <div class="w-full max-w-md bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold text-gray-200 mb-4">Nouvelle vente</h2>
+
+    <form method="post" class="flex flex-col">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-300 mb-1">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <p class="text-danger text-xs mt-1">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn-primary mt-2">Enregistrer la vente</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

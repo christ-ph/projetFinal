@@ -1,22 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Fournisseurs</h1>
-<a href="{% url 'partenaires:fournisseur_create' %}">+ Nouveau fournisseur</a>
-<table>
-    <tr><th>Nom</th><th>Prénom</th><th>Téléphone</th><th>Adresse</th><th>Actions</th></tr>
+<section class="py-10">
+  <div class="mb-7 flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <h1 class="text-3xl font-bold text-white">Fournisseurs</h1>
+    <a href="{% url 'partenaires:fournisseur_create' %}" class="btn-primary text-center">+ Nouveau fournisseur</a>
+  </div>
+  <div class="flex flex-wrap justify-center gap-4 sm:justify-start">
     {% for f in fournisseurs %}
-    <tr>
-        <td>{{ f.nom }}</td>
-        <td>{{ f.prenom }}</td>
-        <td>{{ f.telephone }}</td>
-        <td>{{ f.adresse }}</td>
-        <td>
-            <a href="{% url 'partenaires:fournisseur_update' f.pk %}">Modifier</a>
-            <a href="{% url 'partenaires:fournisseur_delete' f.pk %}">Supprimer</a>
-        </td>
-    </tr>
+      <article class="flex w-full max-w-[280px] flex-col rounded-xl border border-border bg-primary p-5 text-center shadow-[0_4px_10px_#FFC73B] transition duration-200 hover:-translate-y-1 hover:scale-[1.03]">
+        <h2 class="mb-2 break-words text-lg font-semibold text-[#3BFFC7]">{{ f.nom }} {{ f.prenom }}</h2>
+        <p class="break-words text-sm text-[#3BFFC7]"><strong>Téléphone :</strong> {{ f.telephone }}</p>
+        <p class="mt-1 break-words text-sm text-[#3BFFC7]"><strong>Adresse :</strong> {{ f.adresse }}</p>
+        <div class="mt-4 flex flex-col gap-2">
+          <a href="{% url 'partenaires:fournisseur_update' f.pk %}" class="btn-primary !px-3 !py-2 !text-xs text-center">Modifier</a>
+          <a href="{% url 'partenaires:fournisseur_delete' f.pk %}" class="btn-secondary !px-3 !py-2 !text-xs text-center">Supprimer</a>
+        </div>
+      </article>
     {% empty %}
-    <tr><td colspan="5">Aucun fournisseur.</td></tr>
+      <p class="text-[#3BFFC7]">Aucun fournisseur.</p>
     {% endfor %}
-</table>
+  </div>
+  {% include "includes/pagination.html" %}
+</section>
 {% endblock %}

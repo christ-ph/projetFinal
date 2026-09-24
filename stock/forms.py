@@ -1,8 +1,9 @@
 from django import forms
+from projet_final.forms import StyledFormMixin
 from .models import Article
 
 
-class ArticleForm(forms.ModelForm):
+class ArticleForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = Article
         fields = ["nom_article", "categorie", "quantite", "prix_unitaire",

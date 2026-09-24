@@ -1,0 +1,12 @@
+<section class="mx-auto flex min-h-[calc(100vh-160px)] max-w-md items-center py-10">
+  <div class="w-full rounded-2xl border border-border bg-secondary p-6 text-center shadow-[0_12px_35px_rgba(0,0,0,0.3)] sm:p-8">
+    <p class="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-danger">Attention</p>
+    <h1 class="text-2xl font-bold text-slate-900">Confirmer la suppression</h1>
+    <p class="mt-4 text-sm leading-6 text-slate-700">Voulez-vous vraiment supprimer « {{ objet }} » ?</p>
+    <form method="post" class="mt-7 flex flex-col gap-3 sm:flex-row">
+      {% csrf_token %}
+      <button type="submit" class="btn-danger flex-1 text-center">Oui, supprimer</button>
+      <a href="{% url retour %}" class="btn-secondary flex-1 text-center">Annuler</a>
+    </form>
+  </div>
+</section>

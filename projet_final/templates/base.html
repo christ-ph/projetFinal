@@ -29,11 +29,15 @@
           <a class="font-bold text-lg" href="/">projet_final</a>
           <ul class="flex gap-4 text-sm">
             <li><a class="hover:text-red-600" href="/stock/">Articles</a></li>
+            {% if user.role == "admin" or user.is_superuser %}
             <li><a class="hover:text-blue-600" href="/partenaires/clients/">Clients</a></li>
             <li><a class="hover:text-blue-600" href="/partenaires/fournisseurs/">Fournisseurs</a></li>
             <li><a class="hover:text-blue-600" href="/transactions/ventes/">Ventes</a></li>
             <li><a class="hover:text-blue-600" href="/transactions/commandes/">Commandes</a></li>
+            {% endif %}
+            {% if user.is_staff %}
             <li><a class="hover:text-blue-600" href="/admin/">Admin</a></li>
+            {% endif %}
           </ul>
         </nav>
       </div>

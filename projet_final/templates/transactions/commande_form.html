@@ -1,10 +1,4 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ titre }}</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enregistrer</button>
-    <a href="{% url 'transactions:commande_list' %}">Annuler</a>
-</form>
+{% include "includes/entity_form.html" with cancel_url="transactions:commande_list" %}
 {% endblock %}

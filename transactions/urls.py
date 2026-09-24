@@ -9,6 +9,8 @@ urlpatterns = [
     path("ventes/nouvelle/", views.vente_create, name="vente_create"),
     path("ventes/<int:pk>/modifier/", views.vente_update, name="vente_update"),
     path("ventes/<int:pk>/supprimer/", views.vente_delete, name="vente_delete"),
+    path("ventes/<int:pk>/detail",views.vente_detail,name="vente_detail"),
+    path('ventes/nouveau/', views.create_vente, name='vente_create'),
 
     # Commandes
     path("commandes/", views.commande_list, name="commande_list"),

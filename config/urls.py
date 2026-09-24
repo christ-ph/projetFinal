@@ -18,6 +18,8 @@ urlpatterns = [
     path("stock/", include("stock.urls")),
     path("partenaires/", include("partenaires.urls")),
     path("transactions/", include("transactions.urls")),
+    path("accounts/", include("allauth.urls")),
+    path("users/", include("projet_final.users.urls", namespace="users")),
 
     # Fichiers média (dev)
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),

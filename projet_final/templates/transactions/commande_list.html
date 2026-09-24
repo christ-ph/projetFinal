@@ -1,23 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Commandes</h1>
-<a href="{% url 'transactions:commande_create' %}">+ Nouvelle commande</a>
-<table>
-    <tr><th>Article</th><th>Fournisseur</th><th>Quantité</th><th>Prix</th><th>Date</th><th>Actions</th></tr>
+<section class="py-10">
+  <div class="mb-7 flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <h1 class="text-3xl font-bold text-white">Commandes</h1>
+    <a href="{% url 'transactions:commande_create' %}" class="btn-primary text-center">+ Nouvelle commande</a>
+  </div>
+  <div class="flex flex-wrap justify-center gap-4 sm:justify-start">
     {% for c in commandes %}
-    <tr>
-        <td>{{ c.article.nom_article }}</td>
-        <td>{{ c.fournisseur }}</td>
-        <td>{{ c.quantite }}</td>
-        <td>{{ c.prix }}</td>
-        <td>{{ c.date_commande }}</td>
-        <td>
-            <a href="{% url 'transactions:commande_update' c.pk %}">Modifier</a>
-            <a href="{% url 'transactions:commande_delete' c.pk %}">Supprimer</a>
-        </td>
-    </tr>
+      <article class="flex w-full max-w-[280px] flex-col rounded-xl border border-border bg-primary p-5 text-center shadow-[0_4px_10px_#FFC73B] transition duration-200 hover:-translate-y-1 hover:scale-[1.03]">
+        <h2 class="mb-2 break-words text-lg font-semibold text-[#3BFFC7]">{{ c.article.nom_article }}</h2>
+        <p class="break-words text-sm text-[#3BFFC7]"><strong>Fournisseur :</strong> {{ c.fournisseur }}</p>
+        <p class="mt-1 text-sm text-[#3BFFC7]"><strong>Quantité :</strong> {{ c.quantite }}</p>
+        <p class="mt-1 text-sm text-[#3BFFC7]"><strong>Prix :</strong> {{ c.prix }}</p>
+        <p class="mt-1 text-sm text-[#3BFFC7]"><strong>Date :</strong> {{ c.date_commande }}</p>
+        <div class="mt-4 flex flex-col gap-2">
+          <a href="{% url 'transactions:commande_update' c.pk %}" class="btn-primary !px-3 !py-2 !text-xs text-center">Modifier</a>
+          <a href="{% url 'transactions:commande_delete' c.pk %}" class="btn-secondary !px-3 !py-2 !text-xs text-center">Supprimer</a>
+        </div>
+      </article>
     {% empty %}
-    <tr><td colspan="6">Aucune commande.</td></tr>
+      <p class="text-[#3BFFC7]">Aucune commande.</p>
     {% endfor %}
-</table>
+  </div>
+  {% include "includes/pagination.html" %}
+</section>
 {% endblock %}

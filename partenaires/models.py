@@ -4,6 +4,13 @@ from django.db import models
 
 
 class Client(models.Model):
+    user = models.OneToOneField(
+        "users.User",
+        on_delete=models.SET_NULL,
+        related_name="client_profile",
+        null=True,
+        blank=True,
+    )
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     telephone = models.CharField(max_length=20)
