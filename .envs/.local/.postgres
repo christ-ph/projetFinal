@@ -1,7 +1,11 @@
 # PostgreSQL
 # ------------------------------------------------------------------------------
-POSTGRES_HOST=postgres
+POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_DB=projet_final
-POSTGRES_USER=GayclkwqZIWXLCgwzLPbFzMEZZmNxjzk
-POSTGRES_PASSWORD=wWTKupGT5P8s3nKxZTbQuw2OvJUBQAn8XsDZEkWc8n3WLM0QTiL0YY40MCucKuVA
+POSTGRES_USER=christ
+POSTGRES_PASSWORD=123456
+
+
+
+

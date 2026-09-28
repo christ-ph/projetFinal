@@ -1,0 +1,166 @@
+@startuml cas_utilisation_plateforme
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam style strictuml
+skinparam nodesep 90
+skinparam ranksep 130
+skinparam linetype ortho
+
+actor Utilisateur
+actor Eleve
+actor Administrateur
+actor "Agrégateur Mobile Money" as MobileMoney <<système>>
+actor "Régie publicitaire" as Regie <<système>>
+
+Utilisateur <|-- Eleve
+Utilisateur <|-- Administrateur
+
+' -- Chaînage invisible des acteurs humains, groupés à gauche --
+Utilisateur -[hidden]d- Eleve
+Eleve -[hidden]d- Administrateur
+
+' -- Chaînage invisible des acteurs systèmes entre eux --
+MobileMoney -[hidden]d- Regie
+
+rectangle "Plateforme de révision" as Plateforme {
+
+  usecase "Se connecter" as UC_Connexion
+  usecase "S'inscrire\n(choisir classe/filière)" as UC_Inscription
+  usecase "Changer de classe\n(en cas d'échec)" as UC_ChangerClasse
+
+  usecase "Consulter un contenu gratuit" as UC_ConsulterGratuit
+  usecase "Afficher une publicité\n(bannière)" as UC_AfficherPub
+  usecase "Acheter un contenu à l'unité" as UC_AcheterContenu
+  usecase "Acheter un pack" as UC_AcheterPack
+  usecase "Souscrire à un abonnement" as UC_Souscrire
+  usecase "Renouveler l'abonnement" as UC_Renouveler
+  usecase "Payer via Mobile Money" as UC_Payer
+
+  usecase "Répondre à un QCM" as UC_RepondreQCM
+  usecase "Corriger automatiquement (QCM)" as UC_CorrectionAuto
+  usecase "Regagner une vie\n(pub récompensée)" as UC_RegagnerVie
+
+  usecase "Consulter un exercice" as UC_ConsulterExercice
+  usecase "Afficher le corrigé-type" as UC_Corrige
+  usecase "Demander une correction premium" as UC_DemandeCorrection
+  usecase "Consulter sa progression" as UC_Progression
+
+  usecase "Rédiger un contenu" as UC_Rediger
+  usecase "Définir le statut d'accès" as UC_DefinirStatut
+  usecase "Publier un contenu" as UC_Publier
+  usecase "Modifier un contenu" as UC_Modifier
+  usecase "Traiter une correction premium" as UC_Traiter
+  usecase "Consulter ses revenus" as UC_Revenus
+}
+
+' -- Ancrage invisible : force les acteurs systèmes à se placer
+' -- après (à droite de) tout le rectangle, en face des acteurs
+' -- humains, plutôt qu'au milieu d'un cas d'utilisation précis --
+Plateforme -[hidden]r- MobileMoney
+
+' =====================================================
+' ASSOCIATIONS DES ACTEURS
+' =====================================================
+
+Utilisateur -- UC_Connexion
+
+Eleve -- UC_Inscription
+Eleve -- UC_ChangerClasse
+Eleve -- UC_ConsulterGratuit
+Eleve -- UC_AcheterContenu
+Eleve -- UC_AcheterPack
+Eleve -- UC_Souscrire
+Eleve -- UC_Renouveler
+Eleve -- UC_RepondreQCM
+Eleve -- UC_ConsulterExercice
+Eleve -- UC_DemandeCorrection
+Eleve -- UC_Progression
+
+Administrateur -- UC_Rediger
+Administrateur -- UC_DefinirStatut
+Administrateur -- UC_Publier
+Administrateur -- UC_Modifier
+Administrateur -- UC_Traiter
+Administrateur -- UC_Revenus
+
+' =====================================================
+' AUTHENTIFICATION
+' Chaque opération administrateur nécessite une connexion
+' =====================================================
+
+UC_Rediger ..> UC_Connexion : <<include>>
+UC_DefinirStatut ..> UC_Connexion : <<include>>
+UC_Publier ..> UC_Connexion : <<include>>
+UC_Modifier ..> UC_Connexion : <<include>>
+UC_Traiter ..> UC_Connexion : <<include>>
+UC_Revenus ..> UC_Connexion : <<include>>
+
+' =====================================================
+' GESTION DES CONTENUS
+' "Rédiger un contenu" inclut toutes les autres opérations
+' sur ce contenu ; chacune reste aussi déclenchable seule
+' par l'administrateur (voir ses associations directes ci-dessus)
+' =====================================================
+
+UC_Rediger ..> UC_DefinirStatut : <<include>>
+UC_Rediger ..> UC_Publier : <<include>>
+UC_Rediger ..> UC_Modifier : <<include>>
+
+' =====================================================
+' CONTENU GRATUIT ET PUBLICITE
+' =====================================================
+
+UC_AfficherPub ..> UC_ConsulterGratuit : <<extend>>
+note on link
+  élève non abonné
+end note
+
+' =====================================================
+' QCM
+' =====================================================
+
+UC_RepondreQCM ..> UC_CorrectionAuto : <<include>>
+
+UC_RegagnerVie ..> UC_RepondreQCM : <<extend>>
+note on link
+  vies épuisées
+end note
+
+' =====================================================
+' EXERCICES
+' Pas de réponse saisie par l'élève : il consulte le
+' corrigé-type s'il existe, ou demande une correction
+' premium s'il n'y en a pas et qu'il est abonné.
+' =====================================================
+
+UC_ConsulterExercice ..> UC_Corrige : <<include>>
+
+UC_DemandeCorrection ..> UC_ConsulterExercice : <<extend>>
+note on link
+  élève abonné et
+  pas de corrigé-type disponible
+end note
+
+' =====================================================
+' PAIEMENTS
+' =====================================================
+
+UC_AcheterContenu ..> UC_Payer : <<include>>
+UC_AcheterPack ..> UC_Payer : <<include>>
+UC_Souscrire ..> UC_Payer : <<include>>
+UC_Renouveler ..> UC_Payer : <<include>>
+
+' =====================================================
+' SYSTEMES EXTERNES
+' Cas d'utilisation en premier, acteur système en second,
+' pour que ces acteurs se placent à droite (opposé des
+' acteurs humains à gauche)
+' =====================================================
+
+UC_Payer -- MobileMoney
+
+UC_AfficherPub -- Regie
+UC_RegagnerVie -- Regie
+
+@enduml

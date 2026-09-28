@@ -28,7 +28,7 @@ user_detail_view = UserDetailView.as_view()
 class UserUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = User
     fields = ["name"]
-    success_message = _("Information successfully updated")
+    success_message = _("Informations mises à jour avec succès.")
 
     def get_success_url(self) -> str:
         assert self.request.user.is_authenticated  # type guard

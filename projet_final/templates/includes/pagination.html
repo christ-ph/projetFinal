@@ -1,0 +1,15 @@
+{% if is_paginated %}
+  <nav class="flex items-center justify-center gap-3 mt-6" aria-label="Pagination">
+    {% if page_obj.has_previous %}
+      <a class="btn-secondary !px-3 !py-2 !text-xs" href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+    {% endif %}
+
+    <span class="text-sm text-[#3BFFC7]">
+      Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a class="btn-primary !px-3 !py-2 !text-xs" href="?page={{ page_obj.next_page_number }}">Suivant</a>
+    {% endif %}
+  </nav>
+{% endif %}

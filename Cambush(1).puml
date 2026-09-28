@@ -1,0 +1,406 @@
+@startuml Cambush_final
+
+' ==== Réglages généraux pour la lisibilité ====
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+skinparam classFontStyle bold
+skinparam wrapWidth 220
+skinparam padding 3
+skinparam nodesep 70
+skinparam ranksep 110
+skinparam ArrowColor #444444
+skinparam ArrowFontSize 11
+skinparam ClassBorderColor #444444
+skinparam ClassBackgroundColor #FAFAFA
+skinparam NoteBackgroundColor #FFF8DC
+skinparam linetype polyline
+skinparam shadowing false
+hide circle
+hide empty members
+
+left to right direction
+' ==== Enumérations ====
+enum StatutAcces {
+  gratuit
+  payant
+}
+enum StatutPublication {
+  brouillon
+  publie
+  archive
+}
+enum StatutPaiement {
+  en_attente
+  reussi
+  echoue
+  rembourse
+}
+enum StatutDemande {
+  en_attente
+  traitee
+}
+enum TypeRevenu {
+  tache_contenu
+  part_vente
+  part_abonnement
+  tache_correction
+}
+enum StatutProgression {
+  non_commence
+  en_cours
+  termine
+}
+
+' ==== Utilisateurs ====
+abstract class Utilisateur {
+  -nom: String
+  -prenom: String
+  -email: String
+  -motDePasse: String
+  +authentifier(email: String, motDePasse: String): Boolean
+  +modifierProfil(donnees: Map)
+}
+
+class Eleve {
+  -matricule: String
+  -dateNaissance: Date
+  -viesRestantes: Integer = 5
+  +estAbonne(): Boolean
+  +consulterContenu(contenu: Contenu)
+  +acheterContenu(contenu: Contenu): Achat
+  +acheterPack(pack: Pack): Achat
+  +souscrireAbonnement(plan: PlanAbonnement): Abonnement
+  +passerQCM(qcm: QCM): Tentative
+  +consulterCorrige(exercice: Exercice): Correction
+  +demanderCorrectionPremium(exercice: Exercice): DemandeCorrection
+  +consulterProgression(): Map
+  +perdreVie()
+  +regagnerVie()
+}
+
+class Administrateur {
+  -contactPaiement: String
+  +rediger(cible: Object, type: String, donnees: Map): Contenu
+  +publier(contenu: Contenu)
+  +modifierContenu(contenu: Contenu, donnees: Map)
+  +definirStatutAcces(contenu: Contenu, statut: String)
+  +traiterCorrection(demande: DemandeCorrection, commentaire: String)
+  +consulterRevenus(): Revenu[0..*]
+}
+
+
+' ==== Scolarité ====
+class Niveau {
+  -code: String
+  -libelle: String
+  -ordre: Integer
+}
+
+class Filiere {
+  -code: String
+  -nom: String
+}
+
+class Classe {
+  -code: String
+  -nom: String
+}
+note bottom of Classe
+  Classe = Niveau + Filière
+  (ex : Terminale C).
+  Créée une seule fois.
+end note
+
+class AnneeAcademique {
+  -libelle: String
+  -dateDebut: Date
+  -dateFin: Date
+  -estCourante: Boolean
+}
+
+class Inscription {
+  -numero: String
+  -dateInscription: DateTime
+  -statut: String
+  +corriger(nouvelleClasse: Classe)
+}
+
+' ==== Programme ====
+class Matiere {
+  -code: String
+  -nom: String
+  -description: String
+}
+
+class Programme {
+  -coefficient: Integer
+  -volumeHoraire: Integer
+  -statutPublication: StatutPublication
+  -version: Integer
+  +dupliquer(nouvelleAnnee: AnneeAcademique): Programme
+}
+
+class Module {
+  -titre: String
+  -ordre: Integer
+}
+
+class Chapitre {
+  -titre: String
+  -ordre: Integer
+  -dureeEstimee: Integer
+}
+
+class Lecon {
+  -titre: String
+  -ordre: Integer
+  -objectifs: String
+}
+
+' ==== Contenu pédagogique ====
+abstract class Contenu {
+  -titre: String
+  -description: String
+  -statutAcces: StatutAcces
+  -statutPublication: StatutPublication
+  -prix: Decimal
+  -dateCreation: DateTime
+  -dateModification: DateTime
+  +publier()
+  +modifier(donnees: Map)
+  +definirPrix(montant: Decimal)
+}
+
+class FicheCours {
+  -fichier: String
+  -nbPages: Integer
+}
+
+class QCM {
+  -duree: Integer
+  -seuilReussite: Integer
+  +nbQuestions(): Integer
+}
+
+class Exercice {
+  -enonce: String
+  -difficulte: String
+  +afficherCorrige(): Correction
+}
+
+class SujetConcours {
+  -session: Integer
+  -epreuve: String
+  -duree: Integer
+}
+
+class Correction {
+  -texte: String
+  -fichier: String
+  -auteur: String
+  -dateCreation: DateTime
+}
+
+
+' ==== QCM détaillé ====
+class Question {
+  -enonce: String
+  -points: Integer
+  +noter(choix: ChoixUtilisateur): Integer
+}
+
+class Reponse {
+  -texte: String
+  -estCorrecte: Boolean
+}
+
+class Tentative {
+  -dateDebut: DateTime
+  -dateFin: DateTime
+  +terminer()
+}
+
+class ChoixUtilisateur {
+  -dateChoix: DateTime
+  +estCorrect(): Boolean
+}
+note bottom of ChoixUtilisateur
+  Si le choix est faux :
+  eleve.perdreVie()
+end note
+
+class Resultat {
+  -score: Integer
+  -scoreMax: Integer
+  -pourcentage: Float
+  +calculer()
+}
+
+' ==== Concours et packs ====
+class Concours {
+  -nom: String
+  -organisme: String
+  -description: String
+}
+
+class PackSujets {
+  -titre: String
+  -description: String
+  -prix: Decimal
+  +nbSujets(): Integer
+}
+
+class Pack {
+  -titre: String
+  -prix: Decimal
+  +ajouterContenu(contenu: Contenu)
+  +calculerPrix(): Decimal
+}
+
+' ==== Commerce ====
+class Achat {
+  -dateAchat: DateTime
+}
+note bottom of Achat
+  {xor} contenus, pack, packSujets
+end note
+
+class Paiement {
+  -montant: Decimal
+  -statutPaiement: StatutPaiement
+  -referenceTransaction: String
+  -methode: String
+  -datePaiement: DateTime
+  +confirmer(reference: String)
+  +rembourser()
+}
+note bottom of Paiement
+  {xor} achat, abonnement
+end note
+
+class PlanAbonnement {
+  -nom: String
+  -duree: Integer
+  -prix: Decimal
+}
+
+class Abonnement {
+  -dateDebut: DateTime
+  -dateFin: DateTime
+  +estActif(): Boolean
+  +renouveler()
+  +annuler()
+}
+
+' ==== Suivi pédagogique ====
+class Progression {
+  -dernierAcces: DateTime
+  -pourcentage: Integer
+  -statut: StatutProgression
+  +terminer()
+}
+
+class DemandeCorrection {
+  -commentaireAdmin: String
+  -dateDemande: DateTime
+  -dateTraitement: DateTime
+  -statutDemande: StatutDemande
+  +assigner(administrateur: Administrateur)
+  +traiter(commentaire: String)
+}
+note bottom of DemandeCorrection
+  Réservé aux élèves abonnés,
+  et seulement si l'exercice
+  n'a pas de Correction
+  (corrigé-type).
+end note
+
+class Revenu {
+  -type: TypeRevenu
+  -montant: Decimal
+  -reference: String
+  -date: DateTime
+  +calculerPartVente(achat: Achat): Decimal
+  +calculerPartAbonnement(periode: Object): Decimal
+}
+
+' ==== Héritage ====
+Utilisateur <|-- Eleve
+Utilisateur <|-- Administrateur
+Contenu <|-- FicheCours
+Contenu <|-- QCM
+Contenu <|-- Exercice
+Contenu <|-- SujetConcours
+
+' ==== Scolarité ====
+Niveau "1" -- "0..*" Classe : regroupe
+Filiere "0..1" -- "0..*" Classe : qualifie
+Eleve "1" -- "0..*" Inscription : possede
+Classe "1" -- "0..*" Inscription : accueille
+AnneeAcademique "1" -- "0..*" Inscription : porte
+
+' ==== Programme ====
+Matiere "1" -- "0..*" Programme : a
+Classe "1" -- "0..*" Programme : suit
+AnneeAcademique "1" -- "0..*" Programme : pour
+Programme "1" *-- "0..*" Module : contient
+Programme "1" *-- "1..*" Chapitre : contient
+Module "0..1" -- "1..*" Chapitre : regroupe
+Chapitre "1" *-- "1..*" Lecon : contient
+
+' ==== Contenus ====
+Contenu "0..*" -- "0..*" Lecon : illustre
+Exercice "1" -- "0..1" Correction : corrigeType
+SujetConcours "1" -- "0..1" Correction : corrigeType
+
+' ==== QCM ====
+QCM "1" *-- "1..*" Question : contient
+Question "1" *-- "2..*" Reponse : propose
+Eleve "1" -- "0..*" Tentative : passe
+Tentative "0..*" -- "1" QCM : porteSur
+Tentative "1" *-- "0..*" ChoixUtilisateur : enregistre
+ChoixUtilisateur "0..*" -- "1" Question : repondA
+ChoixUtilisateur "0..*" -- "1..*" Reponse : coche
+Tentative "1" -- "1" Resultat : produit
+
+' ==== Concours et packs ====
+Concours "1" -- "0..*" SujetConcours : propose
+SujetConcours "0..*" -- "1..*" Niveau : cible
+PackSujets "0..*" o-- "1..*" SujetConcours : regroupe
+Contenu "0..*" -- "0..*" Pack : inclusDans
+Module "0..1" -- "0..*" Pack : themeDe
+
+' ==== Progression ====
+Eleve "1" -- "0..*" Progression : suit
+Progression "0..*" -- "1" Contenu : concerne
+
+' ==== Achats / abonnements / paiements ====
+Eleve "1" -- "0..*" Achat : effectue
+Eleve "1" -- "0..1" Abonnement : souscrit
+Achat "0..*" -- "0..*" Contenu : porteSur
+Achat "0..*" -- "0..1" Pack : porteSur
+Achat "0..*" -- "0..1" PackSujets : porteSur
+Achat "0..1" -- "1..*" Paiement : reglePar
+Abonnement "0..1" -- "1..*" Paiement : reglePar
+Abonnement "0..*" -- "1" PlanAbonnement : suit
+
+' ==== Corrections ====
+Eleve "1" -- "0..*" DemandeCorrection : demande
+Exercice "1" -- "0..*" DemandeCorrection : concerne
+
+' ==== Administration ====
+Administrateur "1" -- "0..*" Contenu : redige
+Administrateur "1" -- "0..*" DemandeCorrection : traite
+Administrateur "1" -- "0..*" Revenu : percoit
+
+
+' ==== Usage des énumérations ====
+Contenu ..> StatutAcces
+Contenu ..> StatutPublication
+Programme ..> StatutPublication
+Paiement ..> StatutPaiement
+DemandeCorrection ..> StatutDemande
+Revenu ..> TypeRevenu
+Progression ..> StatutProgression
+
+@enduml

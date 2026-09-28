@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="min-h-screen w-full flex justify-center items-center bg-primary px-4">
+  <div class="w-full max-w-md bg-primary border border-border rounded-xl px-6 py-8 text-center
+              shadow-[0_4px_10px_#FFC73B]
+              hover:-translate-y-1 hover:scale-[1.03] hover:border-border
+              transition duration-200 flex flex-col gap-4">
+
+    <h1 class="text-[1.05rem] font-semibold text-[#3BFFC7] wrap-break-word">
+      <strong>Nom client:</strong> {{ vente.client.nom }}
+    </h1>
+
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">numero : {{ vente.client.telephone }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">article : {{ vente.article.nom_article }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Quantité : {{ vente.quantite }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Prix unitaire : {{ vente.prix }}</p>
+    <p class="text-[0.85rem] text-[#3BFFC7] wrap-break-word">Date Vente: {{ vente.date_vente|default:"—" }}</p>
+
+    <a href="{% url 'transactions:vente_list' %}" class="btn-primary mt-2">Retour</a>
+  </div>
+</div>
+
+{% endblock %}

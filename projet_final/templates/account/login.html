@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion — projet_final{% endblock title %}
+
+{% block content %}
+<section class="flex min-h-[calc(100vh-72px)] items-center justify-center py-12 sm:py-16">
+  <div class="relative w-full max-w-md overflow-hidden rounded-3xl border border-border/60 bg-secondary p-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)] sm:p-9">
+    <div class="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-primary/30 blur-2xl"></div>
+    <div class="pointer-events-none absolute -bottom-20 -left-16 h-40 w-40 rounded-full bg-border/30 blur-2xl"></div>
+
+    <header class="relative mb-8 text-center">
+      <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-xl font-black text-white shadow-lg shadow-primary/30">
+        P
+      </div>
+      <p class="mb-2 text-xs font-bold uppercase tracking-[0.24em] text-primary">Espace sécurisé</p>
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900">Bon retour</h1>
+      <p class="mt-2 text-sm leading-6 text-slate-700">Connectez-vous pour accéder à votre espace de gestion.</p>
+    </header>
+
+    <form method="post" action="{% url 'account_login' %}" class="relative space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="rounded-lg border border-danger/40 bg-danger/10 p-3 text-sm text-red-800" role="alert">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        {% if field.name == "remember" %}
+          <div class="flex items-center gap-3 rounded-lg bg-white/40 px-3 py-2">
+            {{ field }}
+            <label for="{{ field.id_for_label }}" class="text-sm text-slate-700">{{ field.label }}</label>
+          </div>
+        {% else %}
+          <div class="group rounded-2xl border border-transparent p-1 transition focus-within:border-primary/20 focus-within:bg-white/20">
+            <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-800">
+              {{ field.label }}
+            </label>
+            {{ field }}
+          </div>
+        {% endif %}
+        {% if field.errors %}
+          <p class="text-sm text-red-700">{{ field.errors|striptags }}</p>
+        {% endif %}
+      {% endfor %}
+
+      {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+      {% endif %}
+
+      <button type="submit" class="btn-primary w-full text-center">Se connecter à mon espace</button>
+    </form>
+
+    <div class="relative mt-7 border-t border-slate-900/10 pt-5 text-center text-sm">
+      <a href="{% url 'account_reset_password' %}" class="font-medium text-slate-700 hover:text-primary hover:underline">Mot de passe oublié ?</a>
+      <p class="mt-4 text-slate-700">
+        Pas encore de compte ?
+        <a href="{% url 'account_signup' %}" class="font-bold text-primary hover:underline">Créer un compte</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock content %}
