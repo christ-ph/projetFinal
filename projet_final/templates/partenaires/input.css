@@ -1,6 +1,12 @@
 /* projet_final/static/css/src/input.css */
 @import "tailwindcss";
 
+/* ── Sources pour la détection des classes ── */
+@source "../../../templates";
+@source "../../../**/templates/**/*.html";
+@source "../../../static/**/*.js";
+
+
 @theme {
   --color-primary: #FF643B;
   --color-primary-light: #3b82f6;
