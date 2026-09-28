@@ -236,7 +236,7 @@ pytest-django==4.14.0
 pytest-sugar==1.1.1
 python-discovery==1.6.0
     # via virtualenv
-python-slugify==8.0.4
+python-slugify==9.1.1
     # via projet-final
 pyyaml==6.0.3
     # via
