@@ -56,15 +56,8 @@ CSRF_COOKIE_SECURE = env.bool("DJANGO_CSRF_COOKIE_SECURE", default=True)
 
 # Le préfixe __Secure- n'est valide que si le cookie est Secure (donc HTTPS).
 # En HTTP local, on doit utiliser les noms standards sinon le navigateur refuse le cookie.
-if SESSION_COOKIE_SECURE:
-    SESSION_COOKIE_NAME = "__Secure-sessionid"
-else:
-    SESSION_COOKIE_NAME = "sessionid"
-
-if CSRF_COOKIE_SECURE:
-    CSRF_COOKIE_NAME = "__Secure-csrftoken"
-else:
-    CSRF_COOKIE_NAME = "csrftoken"
+SESSION_COOKIE_NAME = "__Secure-sessionid" if SESSION_COOKIE_SECURE else "sessionid"
+CSRF_COOKIE_NAME = "__Secure-csrftoken" if CSRF_COOKIE_SECURE else "csrftoken"
 
 # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
